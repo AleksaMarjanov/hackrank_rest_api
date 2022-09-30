@@ -1,27 +1,27 @@
 
-'use strict';
+// 'use strict';
 
-const fs = require('fs');
+// const fs = require('fs');
 
-process.stdin.resume();
-process.stdin.setEncoding('utf-8');
+// process.stdin.resume();
+// process.stdin.setEncoding('utf-8');
 
-let inputString = '';
-let currentLine = 0;
+// let inputString = '';
+// let currentLine = 0;
 
-process.stdin.on('data', function(inputStdin) {
-    inputString += inputStdin;
-});
+// process.stdin.on('data', function(inputStdin) {
+//     inputString += inputStdin;
+// });
 
-process.stdin.on('end', function() {
-    inputString = inputString.split('\n');
+// process.stdin.on('end', function() {
+//     inputString = inputString.split('\n');
 
-    main();
-});
+//     main();
+// });
 
-function readLine() {
-    return inputString[currentLine++];
-}
+// function readLine() {
+//     return inputString[currentLine++];
+// }
 
 
 /*
@@ -39,32 +39,60 @@ function readLine() {
 
 
 const axios = require('axios');
+// import axios from "axios"
+
+// if(typeof window !== document ) {
+//     console.log('running in nodejs')
+// } else {
+//     console.log('running in Browser')
+//     const body = document.querySelector('.paragraph')
+// }
 
 const BASE_URL = 'https://jsonmock.hackerrank.com/api/transactions/search?userId='
 
 const getUserTransaction = async (uid, txnType, monthYear) => {
-        try {
-            const response = await axios.get(`${BASE_URL}`)    
-            console.log(response)
-        } catch(error) {
-            console.log(error)
-        }       
-}
+    // const result = []
+    const { data } = await axios.get(`${BASE_URL}`)
+    const fetchedData = data.data
+    console.log(fetchedData); 
+    fetchedData.map(user => {
+            if(user.id === uid) {
+                let time = user.timestamp
+                let monthYear = new Date(time).getDate();
+                console.log('here is the timestamp', monthYear)
+            }   
+        })     
+        // calculate average spending of the user in the Month year 
 
 
-async function main() {
-    const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
+    }
 
-    const uid = parseInt(readLine().trim(), 10);
 
-    const txnType = readLine();
 
-    const monthYear = readLine();
+// async function main() {
+//     const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
 
-    const result = await getUserTransaction(uid, txnType, monthYear);
+//     const uid = parseInt(readLine().trim(), 10);
 
-    ws.write(result.join('\n') + '\n');
+//     const txnType = readLine();
 
-    ws.end();
-}
+//     const monthYear = readLine();
 
+//     const result = await getUserTransaction(uid, txnType, monthYear);
+
+//     ws.write(result.join('\n') + '\n');
+
+//     ws.end();
+// }
+// test case
+getUserTransaction(4, 'debit', '02-2019')
+
+// try
+        // if(result.length === 0) return -1
+        // try {
+        //     const response = await axios.get(`${BASE_URL}`)    
+        //     let fetchedData = response.data
+        //     // console.log(fetchedData)
+        // } catch(error) {
+        //     console.log(error)
+        // } 
