@@ -1,29 +1,3 @@
-
-// 'use strict';
-
-// const fs = require('fs');
-
-// process.stdin.resume();
-// process.stdin.setEncoding('utf-8');
-
-// let inputString = '';
-// let currentLine = 0;
-
-// process.stdin.on('data', function(inputStdin) {
-//     inputString += inputStdin;
-// });
-
-// process.stdin.on('end', function() {
-//     inputString = inputString.split('\n');
-
-//     main();
-// });
-
-// function readLine() {
-//     return inputString[currentLine++];
-// }
-
-
 /*
  * Complete the 'getUserTransaction' function below.
  *
@@ -41,14 +15,18 @@ const axios = require('axios');
 const BASE_URL = 'https://jsonmock.hackerrank.com/api/transactions/search?userId='
 
 const getUserTransaction = async (uid, txnType, monthYear) => {
-    let num = 1
-    const { data } = await axios.get(`${BASE_URL}${uid}&page=${num}`)
-    
+    let num = 0;
+    const {data}  = await axios.get(`${BASE_URL}${uid}`)
     const fetchedData = data.data
-    // loop through all the pages
-    for( i = 0; i < data.total_pages; i++) {
+    const totalPages = data.total_pages
+    for(let i = 0; i < totalPages; i++) {
         num++
-        console.log(data.total_pages)
+        const dataForPages = await axios.get(`${BASE_URL}${uid}&page=${num}`)
+        const allDataForUser = dataForPages.data
+        console.log('fetched data for total pages', allDataForUser
+        )
+    }
+    // loop through all the pages
         // filter txnType == debit
         // const filteredDataByDates = fetchedData.filter(user => {
         //     let milliseconds = user.timestamp
@@ -60,7 +38,6 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
         //     }
         // })
         // filter out specific date
-    }
     
     // filter out the monthYear date out of it
 
