@@ -14,22 +14,34 @@ const axios = require('axios');
 
 const BASE_URL = 'https://jsonmock.hackerrank.com/api/transactions/search?userId='
 
+const convertDate = (input) => {
+    // converting input date from Milliseconds to Date
+    // let milliseconds = input;
+    // let date = new Date(milliseconds).toLocaleDateString('en-us', {year: "numeric", month: "2-digit"})
+    // return convertedDate = date.replace('/', '-')
+    [m, y] = input.split("-");
+    return [y, m - 1]
+
+}
+
 const getUserTransaction = async (uid, txnType, monthYear) => {
     let num = 0;
     const {data}  = await axios.get(`${BASE_URL}${uid}`)
-    const fetchedData = data.data
+    // const fetchedData = data.data
     const totalPages = data.total_pages
     for(let i = 0; i < totalPages; i++) {
         num++
         const dataForPages = await axios.get(`${BASE_URL}${uid}&page=${num}`)
         const allDataForUser = dataForPages.data.data
-        // console.log('fetched data for total pages', allDataForUser)
-        // const filteredAllUserData = allDataForUser.filter(user => {
-        //     user.timestamp === monthYear
-        //     let milliseconds =  user.timestamp
-        //     let date = new Date(milliseconds).toLocaleDateString('en-us', {year: "numeric", month: "2-digit"})
-        //     const userMonthInput = date.replace('/', '-')
-        //     // console.log(userMonthInput)
+        let time =  new Date(...convertDate(monthYear));
+        const convertedDate = time.getTime()
+        // convert user input for monthYear example: 02-2019 to milliseconds
+        let transaction = txnType;
+        console.log(convertedDate)
+        const monthYearRequested = allDataForUser.findIndex((date) => date.transaction == 'debit')
+        console.log(monthYearRequested)
+        // const filteredAllUserData = allDataForUser.filter(date => {
+        //     date.timestamp = convertedDate
         // })
         // console.log(filteredAllUserData)
         
