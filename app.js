@@ -22,36 +22,18 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
     for(let i = 0; i < totalPages; i++) {
         num++
         const dataForPages = await axios.get(`${BASE_URL}${uid}&page=${num}`)
-        const allDataForUser = dataForPages.data
-        console.log('fetched data for total pages', allDataForUser
-        )
-    }
-    // loop through all the pages
-        // filter txnType == debit
-        // const filteredDataByDates = fetchedData.filter(user => {
-        //     let milliseconds = user.timestamp
+        const allDataForUser = dataForPages.data.data
+        // console.log('fetched data for total pages', allDataForUser)
+        // const filteredAllUserData = allDataForUser.filter(user => {
+        //     user.timestamp === monthYear
+        //     let milliseconds =  user.timestamp
         //     let date = new Date(milliseconds).toLocaleDateString('en-us', {year: "numeric", month: "2-digit"})
         //     const userMonthInput = date.replace('/', '-')
-           
-        //     if(userMonthInput === monthYear ) {
-        //         // console.log('here is the timestamp', monthYear)
-        //     }
+        //     // console.log(userMonthInput)
         // })
-        // filter out specific date
-    
-    // filter out the monthYear date out of it
-
-
-
-
-
-    // fetchedData.filter(user => {
-    //             user.monthYear;
-    //             let milliseconds = user.timestamp
-    //             let date = new Date(milliseconds).toLocaleDateString('en-us', {year: "numeric", month: "2-digit"})
-    //             const monthYear = date.replace('/', '-')
-    //             console.log('here is the timestamp', monthYear)
-    //     })     
+        // console.log(filteredAllUserData)
+        
+    }
         // calculate average spending of the user in the Month year 
     }
 
