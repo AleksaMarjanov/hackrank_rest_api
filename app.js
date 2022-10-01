@@ -41,10 +41,29 @@ const axios = require('axios');
 const BASE_URL = 'https://jsonmock.hackerrank.com/api/transactions/search?userId='
 
 const getUserTransaction = async (uid, txnType, monthYear) => {
-    // const result = []
-    const { data } = await axios.get(`${BASE_URL}${uid}`)
+    let num = 1
+    const { data } = await axios.get(`${BASE_URL}${uid}&page=${num}`)
+    
     const fetchedData = data.data
-    console.log(fetchedData); 
+    // loop through all the pages
+    for( i = 0; i < data.total_pages; i++) {
+        num++
+        console.log(data.total_pages)
+        // filter txnType == debit
+        // const filteredDataByDates = fetchedData.filter(user => {
+        //     let milliseconds = user.timestamp
+        //     let date = new Date(milliseconds).toLocaleDateString('en-us', {year: "numeric", month: "2-digit"})
+        //     const userMonthInput = date.replace('/', '-')
+           
+        //     if(userMonthInput === monthYear ) {
+        //         // console.log('here is the timestamp', monthYear)
+        //     }
+        // })
+        // filter out specific date
+    }
+    
+    // filter out the monthYear date out of it
+
 
 
 
