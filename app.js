@@ -41,29 +41,16 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
         num++
         const dataForPages = await axios.get(`${BASE_URL}${uid}&page=${num}`)
         const allDataForUser = dataForPages.data.data
-        // let time =  new Date(...convertDate(monthYear));
-        // const convertedDate = time.getTime()
-        // console.log(convertedDate)
-        // console.log(allDataForUser)
-        // const extracted = allDataForUser.filter((obj) => {
-        //     return obj.txnType === 'debit';
-        // })
-        const extractedArray = allDataForUser.map((item) => {
+        const mappedArray = allDataForUser.map((itemInObj) => {
+            const timestamp = convertDate(itemInObj.timestamp)
+            return {...itemInObj, timestamp}
+        })
+        const extractedArray = mappedArray.map((item) => {
             return extractObject(item, ['txnType', 'timestamp', 'amount' ])
         })
-        // console.log(extractTransactionAndTimestamp)
-        const filteredArray = extractedArray.filter(item => item.txnType === txnType)
-        console.log(filteredArray)
-        // const exactTime = filteredArray.map((time) => {
-        //     return time.timestamp === convertedDate
-        // })
-            // console.log(exactTime)
-        // console.log(mappedArray)
-        // // console.log(extractedArray)
-        // const debitAndTimestamp = extractedArray.find(transaction => transaction.txnType === 'debit')
-        // const result = debitAndTimestamp['debit']
-        // console.log(debitAndTimestamp)
-        
+        const filteredByTxn = extractedArray.filter(item => item.txnType === txnType)
+        const filteredByTimestamp = filteredByTxn.filter(item => item.timestamp === monthYear)  
+        console.log(filteredByTimestamp)
     }}
 
 // test case
