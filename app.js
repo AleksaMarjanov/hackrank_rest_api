@@ -57,8 +57,9 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
     console.log(fetchedData); 
     fetchedData.map(user => {
             if(user.id === uid) {
-                let time = user.timestamp
-                let monthYear = new Date(time).getDate();
+                let milliseconds = user.timestamp
+                let date = new Date(milliseconds).toLocaleDateString('en-us', {year: "numeric", month: "2-digit"})
+                const monthYear = date.replace('/', '-')
                 console.log('here is the timestamp', monthYear)
             }   
         })     
