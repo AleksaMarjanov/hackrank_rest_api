@@ -11,6 +11,7 @@
  */
 
 const axios = require('axios');
+const { curry } = require('lodash');
 
 const BASE_URL = 'https://jsonmock.hackerrank.com/api/transactions/search?userId='
 
@@ -23,14 +24,16 @@ const convertDate = (input) => {
     // return [y, m - 1]
 
 }
-const extractObject = (obj, properties ) => {
-    return properties.reduce((result, prop) => {
-        if(obj.hasOwnProperty(prop)) {
-            result[prop] = obj[prop]
-        }
-        return result
-    }, {})
-}
+// Solution 2
+// helper function for extracting data from object in array
+// const extractObject = (obj, properties ) => {
+//     return properties.reduce((result, prop) => {
+//         if(obj.hasOwnProperty(prop)) {
+//             result[prop] = obj[prop]
+//         }
+//         return result
+//     }, {})
+// }
 
 const getUserTransaction = async (uid, txnType, monthYear) => {
     let result = []
@@ -40,18 +43,39 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
     for(let i = 0; i < totalPages; i++) {
         num++
         const dataForPages = await axios.get(`${BASE_URL}${uid}&page=${num}`)
-        const allDataForUser = dataForPages.data.data
-        const mappedArray = allDataForUser.map((itemInObj) => {
-            const timestamp = convertDate(itemInObj.timestamp)
-            return {...itemInObj, timestamp}
+        const allDataForUserId = dataForPages.data.data
+        const mappedArray = allDataForUserId.map((item) => {
+            const timestamp = convertDate(item.timestamp)
+            const id = item.id
+            const amountNoComm = item.amount.replace(/,/, '');
+            const amountNo$ = amountNoComm.replace('$', '')
+            const amount = Number(amountNo$)
+            const txnType = item.txnType
+            return {id, amount, txnType, timestamp}
         })
-        const extractedArray = mappedArray.map((item) => {
-            return extractObject(item, ['txnType', 'timestamp', 'amount' ])
-        })
-        const filteredByTxn = extractedArray.filter(item => item.txnType === txnType)
-        const filteredByTimestamp = filteredByTxn.filter(item => item.timestamp === monthYear)  
-        console.log(filteredByTimestamp)
-    }}
+        //  console.log(results)
+        // Solution 2
+        // console.log(mappedArray)
+        // const extractedArray = mappedArray.map((item) => {
+        //     return extractObject(item, ['txnType', 'timestamp', 'amount' ])
+        // })
+        const filteredByTxn = mappedArray.filter(item => item.txnType === txnType)
+        const filteredByTimestamp = filteredByTxn.filter(item => item.timestamp === monthYear)
+        // console.log(filteredByTimestamp)
+        const average = filteredByTimestamp.reduce((total, next) => total + next.amount, 0) / filteredByTimestamp.length;
+        // console.log(average)
+        // const averageMonthlySpending = filteredByTimestamp.reduce((total, item) => (total + item.amount) / filteredByTimestamp.length, 0)
+        // console.log(averageMonthlySpending)
+        for ( let item of filteredByTimestamp) {
+            if(item.amount > average ) {
+                result.push(item.id)
+                console.log(result)
+            }
+        }
+    }
+    
+}
+
 
 // test case
 getUserTransaction(4, 'debit', '02-2019')
