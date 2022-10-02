@@ -24,9 +24,7 @@ const convertDate = (input) => {
     // return [y, m - 1]
 }
 
-// const flatten = (array) => {
-//     return Array.isArray(array) ? [].concat.apply([], array.map(flatten)) : array;
-// }
+
 // Solution 2
 // helper function for extracting data from object in array
 // const extractObject = (obj, properties ) => {
@@ -37,6 +35,7 @@ const convertDate = (input) => {
 //         return result
 //     }, {})
 // }a
+
 
 const getUserTransaction = async (uid, txnType, monthYear) => {
     let result = []
@@ -60,17 +59,11 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
         // Solution 2
         // console.log(mappedArray)
         // const extractedArray = mappedArray.map((item) => {
-        //     return extractObject(item, ['txnType', 'timestamp', 'amount' ])
-        // })
-        const filteredByTxn = mappedArray.filter(transaction => transaction.txnType === txnType)
-        const filteredByTimestamp = filteredByTxn.filter(date => date.timestamp === monthYear)
-        let newArray = filteredByTimestamp.reduce(
-            (newArray, {id, amounts}) => newArray
-                .concat(amounts.map(amount => ({ id, ...amount}))),
-            []
-            )
-        console.log(newArray)
-        // filteredByTimestamp.map((item) => newArray.push(item.amount))
+            //     return extractObject(item, ['txnType', 'timestamp', 'amount' ])
+            // })
+            const filteredArray = mappedArray.filter((item) => item.timestamp == monthYear && item.txnType == txnType)
+            console.log(filteredArray)
+
         // const averageMonthlySpending = filteredByTimestamp.reduce((total, item) => (total + item.amount) / filteredByTimestamp.length, 0)
         // console.log(averageMonthlySpending)
         // newArray.push(averageMonthlySpending)
