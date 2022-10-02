@@ -9,50 +9,62 @@
  *
  *  https://jsonmock.hackerrank.com/api/transactions/search?userId=
  */
+const axios = require("axios");
 
-const axios = require('axios');
-// const _ = require('lodash')
+const BASE_URL = "https://jsonmock.hackerrank.com/api/transactions/search?";
 
-const BASE_URL = 'https://jsonmock.hackerrank.com/api/transactions/search?'
-
-// converting input date from Milliseconds to Date
 const convertDate = (input) => {
-    let date = new Date(input).toLocaleDateString('en-us', {year: "numeric", month: "2-digit"})
-    return date.replace('/', '-')
-}    
+  let date = new Date(input).toLocaleDateString("en-us", {
+    year: "numeric",
+    month: "2-digit",
+  });
+  return date.replace("/", "-"); 
+};
 
 const getUserTransaction = async (uid, txnType, monthYear) => {
-    const result = [];
-    const totalPages = await axios.get(`${BASE_URL}userId=${uid}&txnType=${txnType}`).then((result) => result.data.total_pages);
+  const firstResults = [];
+  const totalPages = await axios
+    .get(`${BASE_URL}userId=${uid}&txnType=${txnType}`)
+    .then((response) => response.data.total_pages);
 
-    for(let i = 1; i <= totalPages; i++) {
-        const results = await axios.get(`${BASE_URL}userId=${uid}&txnType=${txnType}&page=${i}`).then((result) => result.data);
+  if ((totalPages === 0) || typeof txnType !== 'string' || !isNaN(uid)) {
+    console.log('Test has failed')
+    return [-1];
+  } else {
+    for (let i = 1; i <= totalPages; i++) {
+      const response = await axios
+        .get(`${BASE_URL}userId=${uid}&txnType=${txnType}&page=${i}`)
+        .then((response) => response.data);
 
-        results?.data?.map((item) => {
-            const resultObject = {
-                timestamp: convertDate(item.timestamp),
-                id: item.id,
-                txnType: item.txnType,
-                amount: Number(item.amount.replace(/,/, '').replace('$', ''))
-            }
-            result.push(resultObject);
-        })
-        
+      response?.data?.map((item) => {
+        const object = {
+          timestamp: convertDate(item.timestamp),
+          id: item.id,
+          txnType: item.txnType,
+          amount: Number(item.amount.replace(/,/, "").replace("$", "")),
+        };
+        firstResults.push(object);
+      });
     }
-    console.log("REZ");
-    let finalResult = []
-    const filteredArray = result.filter((item) => item.timestamp == monthYear); 
-    const average = filteredArray.reduce((total, {amount}) => total + amount, 0) / filteredArray.length
-    console.log(average);
+    let finalResult = [];
+    const filteredArray = firstResults.filter(
+      (item) => item.timestamp == monthYear
+    );
+    const average =
+      filteredArray.reduce((total, { amount }) => total + amount, 0) /
+      filteredArray.length;
 
-        for(let item of filteredArray ) {
-            if( item.amount > average) {
-                finalResult.push(item.id)
-            }
-        }
-        console.log(finalResult)
-}
+    for (var i = 0; i < filteredArray.length; i++) {
+      if (filteredArray[i].amount > average) {
+        finalResult.push(filteredArray[i].id);
+      }
+    }
+    finalResult.sort((a, b) => {
+      return a - b;
+    });
+    console.log(finalResult)
+    return finalResult;
+  }
+};
 
-// test case
-getUserTransaction(4, 'debit', "02-2019")
-
+getUserTransaction(4, "debit", "02-2019");
