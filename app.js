@@ -59,19 +59,40 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
         // const extractedArray = mappedArray.map((item) => {
         //     return extractObject(item, ['txnType', 'timestamp', 'amount' ])
         // })
-        const filteredByTxn = mappedArray.filter(item => item.txnType === txnType)
-        const filteredByTimestamp = filteredByTxn.filter(item => item.timestamp === monthYear)
+        const filteredByTxn = mappedArray.filter(transaction => transaction.txnType === txnType)
+        const filteredByTimestamp = filteredByTxn.filter(date => date.timestamp === monthYear)
         // console.log(filteredByTimestamp)
-        const average = filteredByTimestamp.reduce((total, next) => total + next.amount, 0) / filteredByTimestamp.length;
-        // console.log(average)
+        let output = {}
+        const flatArray = filteredByTimestamp.reduce((prev, curr) => {
+            return prev.concat(curr)
+        }, [])
+
+        flatArray.forEach((obj) => output[obj.amount] = (output[obj.amount] || 0) + obj.timestamp + obj.id + obj.txnType)
+        output = [output]
+        console.log(output)
+        // const sum = filteredByTimestamp.reduce((sum, {amount}) => sum + amount, 0)
+        // console.log(sum)
+        // const average = (arr = []) => {
+        //     const { sum, count } = arr.reduce((acc, val) => {
+        //        let { sum, count } = acc;
+        //        sum += val.amount;
+        //        count++;
+        //        return { sum, count };
+        //        }, {
+        //           sum: 0, count: 0
+        //     });
+        //     return (sum / (count || 1));
+        //  };
+
+        // console.log(average(filteredByTimestamp))
         // const averageMonthlySpending = filteredByTimestamp.reduce((total, item) => (total + item.amount) / filteredByTimestamp.length, 0)
         // console.log(averageMonthlySpending)
-        for ( let item of filteredByTimestamp) {
-            if(item.amount > average ) {
-                result.push(item.id)
-                console.log(result)
-            }
-        }
+        // for ( let item of filteredByTimestamp) {
+        //     if(item.amount > average ) {
+        //         result.push(item.id)
+        //         console.log(result)
+        //     }
+        // }
     }
     
 }
