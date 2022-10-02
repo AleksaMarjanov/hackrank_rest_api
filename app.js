@@ -11,7 +11,7 @@
  */
 
 const axios = require('axios');
-const { curry } = require('lodash');
+const _ = require('lodash')
 
 const BASE_URL = 'https://jsonmock.hackerrank.com/api/transactions/search?userId='
 
@@ -22,8 +22,11 @@ const convertDate = (input) => {
     return convertedDate = date.replace('/', '-')
     // [m, y] = input.split("-");
     // return [y, m - 1]
-
 }
+
+// const flatten = (array) => {
+//     return Array.isArray(array) ? [].concat.apply([], array.map(flatten)) : array;
+// }
 // Solution 2
 // helper function for extracting data from object in array
 // const extractObject = (obj, properties ) => {
@@ -33,7 +36,7 @@ const convertDate = (input) => {
 //         }
 //         return result
 //     }, {})
-// }
+// }a
 
 const getUserTransaction = async (uid, txnType, monthYear) => {
     let result = []
@@ -61,32 +64,18 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
         // })
         const filteredByTxn = mappedArray.filter(transaction => transaction.txnType === txnType)
         const filteredByTimestamp = filteredByTxn.filter(date => date.timestamp === monthYear)
-        // console.log(filteredByTimestamp)
-        let output = {}
-        const flatArray = filteredByTimestamp.reduce((prev, curr) => {
-            return prev.concat(curr)
-        }, [])
-
-        flatArray.forEach((obj) => output[obj.amount] = (output[obj.amount] || 0) + obj.timestamp + obj.id + obj.txnType)
-        output = [output]
-        console.log(output)
-        // const sum = filteredByTimestamp.reduce((sum, {amount}) => sum + amount, 0)
-        // console.log(sum)
-        // const average = (arr = []) => {
-        //     const { sum, count } = arr.reduce((acc, val) => {
-        //        let { sum, count } = acc;
-        //        sum += val.amount;
-        //        count++;
-        //        return { sum, count };
-        //        }, {
-        //           sum: 0, count: 0
-        //     });
-        //     return (sum / (count || 1));
-        //  };
-
-        // console.log(average(filteredByTimestamp))
+        let newArray = filteredByTimestamp.reduce(
+            (newArray, {id, amounts}) => newArray
+                .concat(amounts.map(amount => ({ id, ...amount}))),
+            []
+            )
+        console.log(newArray)
+        // filteredByTimestamp.map((item) => newArray.push(item.amount))
         // const averageMonthlySpending = filteredByTimestamp.reduce((total, item) => (total + item.amount) / filteredByTimestamp.length, 0)
         // console.log(averageMonthlySpending)
+        // newArray.push(averageMonthlySpending)
+        // console.log(newArray)
+        
         // for ( let item of filteredByTimestamp) {
         //     if(item.amount > average ) {
         //         result.push(item.id)
