@@ -27,7 +27,7 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
     .get(`${BASE_URL}userId=${uid}&txnType=${txnType}`)
     .then((response) => response.data.total_pages);
 
-  if ((totalPages === 0) || typeof txnType !== 'string' || !isNaN(uid)) {
+  if (totalPages === 0) {
     console.log('Test has failed')
     return [-1];
   } else {
@@ -47,24 +47,25 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
       });
     }
     let finalResult = [];
+    console.log(firstResults.includes(undefined))
     const filteredArray = firstResults.filter(
       (item) => item.timestamp == monthYear
     );
+    console.log(filteredArray)
     const average =
-      filteredArray.reduce((total, { amount }) => total + amount, 0) /
-      filteredArray.length;
-
+    filteredArray.reduce((total, { amount }) => total + amount, 0) /
+    filteredArray.length;
     for (var i = 0; i < filteredArray.length; i++) {
-      if (filteredArray[i].amount > average) {
-        finalResult.push(filteredArray[i].id);
-      }
+        if (filteredArray[i].amount > average) {
+            finalResult.push(filteredArray[i].id);
+        }
     }
     finalResult.sort((a, b) => {
-      return a - b;
+        return a - b;
     });
     console.log(finalResult)
     return finalResult;
   }
 };
 
-getUserTransaction(4, "debit", "02-2019");
+getUserTransaction(2, "credit", 04-2019);
