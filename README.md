@@ -1,4 +1,4 @@
-# rivet_hackrank_interview
+# hackrank_interview
 REST API challenge
 
 ### In this challenge, uSE HTTP GET method to retrieve infromation from a database of credit card transactions for users, Query https://jsonmock.hackerrank.com/api/transactions/search?userId=
