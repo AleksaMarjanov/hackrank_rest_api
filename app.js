@@ -47,10 +47,10 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
       });
     }
     let finalResult = [];
-    console.log(firstResults.includes(undefined))
     const filteredArray = firstResults.filter(
       (item) => item.timestamp == monthYear
     );
+
     console.log(filteredArray)
     const average =
     filteredArray.reduce((total, { amount }) => total + amount, 0) /
@@ -68,4 +68,4 @@ const getUserTransaction = async (uid, txnType, monthYear) => {
   }
 };
 
-getUserTransaction(2, "credit", 04-2019);
+getUserTransaction(4, "debit", '02-2019');
